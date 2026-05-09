@@ -1,0 +1,9 @@
+[submodule "UABEA"]
+	path = UABEA
+	url = https://github.com/beichen23333/UABEA.git
+[submodule "cn_metadata_exporter"]
+	path = cn_metadata_exporter
+	url = https://github.com/beichen23333/cn_metadata_exporter.git
+[submodule "Cpp2IL"]
+	path = Cpp2IL
+	url = https://github.com/SamboyCoding/Cpp2IL.git
