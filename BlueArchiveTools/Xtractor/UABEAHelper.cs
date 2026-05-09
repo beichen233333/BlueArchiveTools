@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BlueArchiveTools
+namespace BlueArchiveTools.Xtractor
 {
     public static class UABEAHelper
     {

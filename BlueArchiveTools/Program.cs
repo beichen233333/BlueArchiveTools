@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BlueArchiveTools.Xtractor;
 
 namespace BlueArchiveTools
 {
