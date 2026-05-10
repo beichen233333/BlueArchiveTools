@@ -1,15 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using BlueArchiveTools.CLI.Utils;
 using BlueArchiveTools.CLI.MemoryPack;
+using BlueArchiveTools.CLI.CRCManip;
 using YldaDumpCsExporter;
 
 namespace BlueArchiveTools.CLI;
 
-class Program
+public class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         if (args.Length == 0 || args[0] == "-h" || args[0] == "--help")
         {
@@ -28,6 +28,10 @@ class Program
 
             case "dump":
                 HandleDumpCommand(args);
+                break;
+
+            case "crc":
+                HandleCrcCommand(args);
                 break;
 
             default:
@@ -55,9 +59,43 @@ class Program
         Console.WriteLine("   - server : cn (国服), gl (国际服), jp (日服)");
         Console.WriteLine("   注意: 国服不需要 il2cpp，可以为none");
 
+        Console.WriteLine("\n3. [CRC] 修改或计算文件校验值");
+        Console.WriteLine("   格式: crc <subcommand> [args]");
+        Console.WriteLine("   - calc <file> : 计算 CRC32");
+        Console.WriteLine("   - patch <target_hex> <input> <output> [-p pos] [-o]");
+
         Console.WriteLine("\n其他");
         Console.WriteLine("  -h, --help    显示此帮助信息");
         Console.WriteLine("=================================================");
+    }
+
+    private static void HandleCrcCommand(string[] args)
+    {
+        if (args.Length < 2) return;
+        string sub = args[1].ToLower();
+        var crc32 = new CRC32();
+        if (sub == "calc")
+        {
+            if (args.Length < 3) return;
+            using var fs = File.OpenRead(args[2]);
+            Algorithm.Consume(crc32, fs);
+            Console.WriteLine(crc32.HexDigest());
+        }
+        else if (sub == "patch")
+        {
+            if (args.Length < 5) return;
+            uint target = uint.Parse(args[2], System.Globalization.NumberStyles.HexNumber);
+            long? pos = null;
+            bool overwrite = false;
+            for (int i = 5; i < args.Length; i++)
+            {
+                if (args[i] == "-p" || args[i] == "--pos") pos = long.Parse(args[++i]);
+                else if (args[i] == "-o" || args[i] == "--overwrite") overwrite = true;
+            }
+            using var fsIn = File.OpenRead(args[3]);
+            using var fsOut = File.Create(args[4]);
+            Algorithm.ApplyPatch(crc32, target, fsIn, fsOut, pos ?? fsIn.Length, overwrite);
+        }
     }
 
     private static void HandleDumpCommand(string[] args)

@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-
     <WarningLevel>0</WarningLevel>
     <AnalysisLevel>none</AnalysisLevel>
   </PropertyGroup>
@@ -21,7 +20,6 @@
     <Compile Remove="dump.cs" />
     <Content Remove="dump.cs" />
     <None Include="dump.cs" />
-    
     <Compile Remove="Dump/**/*.cs" />
   </ItemGroup>
 
